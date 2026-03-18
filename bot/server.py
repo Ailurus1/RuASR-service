@@ -12,7 +12,6 @@ from telegram.ext import (
     filters,
 )
 
-from moviepy.editor import VideoFileClip
 from utils import get_error_message
 
 
