@@ -14,6 +14,8 @@ from telegram.ext import (
 
 from utils import get_error_message
 
+from moviepy.editor import VideoFileClip
+
 
 class Bot(object):
     def __init__(
@@ -50,6 +52,21 @@ class Bot(object):
             "Transcribing your audio message...",
             reply_to_message_id=update.message.message_id,
         )
+        if update.message.voice is not None:
+            audio = await update.message.voice.get_file()
+            audio_bytes = BytesIO(await audio.download_as_bytearray())
+        elif update.message.video_note is not None:
+            video_note = await update.message.video_note.get_file()
+            byte_data = await video_note.download_as_bytearray()
+            with open("video_note.mp4", "wb") as video_file:
+                video_file.write(byte_data)
+
+            audio_clip = VideoFileClip("video_note.mp4").audio
+            audio_clip.write_audiofile("audio.oga", codec="libvorbis")
+
+            with open("audio.oga", "rb") as file:
+                byte_data = file.read()
+            audio_bytes = BytesIO(byte_data)
 
         audio = await update.message.voice.get_file()
         audio_bytes = BytesIO(await audio.download_as_bytearray())
@@ -64,6 +81,11 @@ class Bot(object):
             await get_error_message(context, message.chat_id)
             print(exc)
             raise RuntimeError(f"Error with the ASR service. Got {exc}")
+        raw_response = requests.post(
+            self.model_endpoint,
+            files={"audio_message": ("audio_message.wav", audio_bytes)},
+            timeout=None,
+        )
 
         try:
             text = json.loads(raw_response.text)["transcription"][0]
@@ -91,7 +113,13 @@ class Bot(object):
         self.app.add_handler(CommandHandler("start", self.start))
         self.app.add_handler(CommandHandler("help", self.help))
         self.app.add_handler(
-            MessageHandler(filters.VOICE & ~filters.COMMAND, self.query)
+            MessageHandler(
+                filters.VOICE & ~filters.COMMAND,
+                self.query,
+            )
+        )
+        self.app.add_handler(
+            MessageHandler(filters.VIDEO_NOTE & ~filters.COMMAND, self.query)
         )
 
         print("Running bot...")
