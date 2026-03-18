@@ -12,6 +12,8 @@ from telegram.ext import (
     filters,
 )
 
+from utils import get_error_message
+
 from moviepy.editor import VideoFileClip
 
 
@@ -66,6 +68,19 @@ class Bot(object):
                 byte_data = file.read()
             audio_bytes = BytesIO(byte_data)
 
+        audio = await update.message.voice.get_file()
+        audio_bytes = BytesIO(await audio.download_as_bytearray())
+
+        try:
+            raw_response = requests.post(
+                self.model_endpoint,
+                files={"audio_message": ("audio_message.wav", audio_bytes)},
+                timeout=None,
+            )
+        except Exception as exc:
+            await get_error_message(context, message.chat_id)
+            print(exc)
+            raise RuntimeError(f"Error with the ASR service. Got {exc}")
         raw_response = requests.post(
             self.model_endpoint,
             files={"audio_message": ("audio_message.wav", audio_bytes)},
@@ -75,6 +90,7 @@ class Bot(object):
         try:
             text = json.loads(raw_response.text)["transcription"][0]
         except Exception as exc:
+            await get_error_message(context, message.chat_id)
             print(exc)
             raise RuntimeError(
                 f"Expected to get `transcription` field in "
