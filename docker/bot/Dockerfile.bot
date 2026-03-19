@@ -9,6 +9,8 @@ COPY . .
 
 RUN curl -LsSf https://astral.sh/uv/install.sh | sh
 
-RUN /root/.cargo/bin/uv pip install --system -r bot/requirements.txt
+ENV PATH="/root/.local/bin:$PATH"
+
+RUN uv pip install --system -r bot/requirements.txt
 
 CMD [ "python3", "-u", "bot" ]
