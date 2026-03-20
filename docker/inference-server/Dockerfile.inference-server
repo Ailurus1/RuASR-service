@@ -10,7 +10,7 @@ RUN curl -LsSf https://astral.sh/uv/install.sh | sh
 
 ENV PATH="/root/.local/bin:$PATH"
 
-RUN uv pip install --system -r inference_server/requirements.txt
+RUN uv pip install --system -r pyproject.toml --extra asr-service
 
 EXPOSE 9090:9090
 
