@@ -22,7 +22,7 @@ bot = [
 asr-service = [
     "fastapi",
     "uvicorn",
-    "torch ==2.5.1",
+    "torch ==2.6.4",
     "transformers",
     "torchaudio",
     "peft",
