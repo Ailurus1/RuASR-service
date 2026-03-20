@@ -19,7 +19,7 @@ jobs:
     - name: Setup Python3
       uses: actions/setup-python@v3
       with:
-        python-version: '3.11' 
+        python-version: '3.11'
 
     - name: Setup uv
       uses: yezz123/setup-uv@v4
