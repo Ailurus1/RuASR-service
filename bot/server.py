@@ -104,6 +104,7 @@ class Bot(object):
         await context.bot.send_message(
             chat_id=message.chat_id,
             text=text,
+            reply_to_message_id=update.message.message_id,
         )
 
     def run(self) -> None:
