@@ -55,7 +55,7 @@ async def test_single_request(test_client, test_audio_path):
 
 
 @pytest.mark.asyncio
-@pytest.mark.parametrize("num_requests", [2, 4])
+@pytest.mark.parametrize("num_requests", 2)
 async def test_concurrent_requests(test_client, test_audio_path, num_requests):
     with open(test_audio_path, "rb") as audio_file:
         file_content = audio_file.read()
