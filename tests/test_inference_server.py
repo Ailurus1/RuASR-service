@@ -11,19 +11,13 @@ from inference_server.profiles import PROFILES
 os.environ["BATCH_SIZE"] = "4"
 
 
-@pytest_asyncio.fixture(scope="session")
-def event_loop():
-    loop = asyncio.get_event_loop_policy().new_event_loop()
-    yield loop
-    loop.close()
-
-
 @pytest_asyncio.fixture
-async def test_client(event_loop):
+async def test_client():
     config = PROFILES["classical-tiny"]
     app.state.asr_model = ASRModel(config)
 
-    queue_task = event_loop.create_task(batched_server.queue_processing())
+    loop = asyncio.get_running_loop()
+    queue_task = loop.create_task(batched_server.queue_processing())
 
     try:
         async with AsyncClient(app=app, base_url="http://test") as client:
