@@ -61,7 +61,7 @@ class ASRModel:
         if self.use_diarization:
             self.diarization = Pipeline.from_pretrained(
                 "pyannote/speaker-diarization-3.1",
-                use_auth_token="YOUR_HF_TOKEN",  # Need to be configured
+                use_auth_token=os.getenv("HF_TOKEN"),
             ).to(device)
 
     def preprocess(
