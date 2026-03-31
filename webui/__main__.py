@@ -43,7 +43,9 @@ def build_interface() -> gr.Blocks:
         )
 
         with gr.Row():
-            audio = gr.Audio(sources=["microphone", "upload"], type="filepath", label="Audio")
+            audio = gr.Audio(
+                sources=["microphone", "upload"], type="filepath", label="Audio"
+            )
         output = gr.Textbox(label="Transcription", lines=8)
 
         submit = gr.Button("Transcribe")
@@ -62,4 +64,3 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-

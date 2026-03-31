@@ -40,7 +40,7 @@ Now we can run servers:
 
 ```bash
 # 1st console: Start inference service
-python3 inference_server
+python3 -m inference_server
 
 # 2nd console: Start bot service (optional if you only need web UI)
 python3 bot
