@@ -25,10 +25,10 @@ make install
 it will install `uv` if you don't have it locally and then install basic dependencies. Depending on which part you are going to run you may need to manually separate virtual environments (or install all of them in the same, currently there are not problems with it actually) and run
 ```bash
 # to run tg-bot
-uv pip install -r bot/requirements.txt
+uv pip install -r pyproject.toml --extra bot
 
 # to run inference server
-uv pip install -r inference_server/requirements.txt
+uv pip install -r pyproject.toml --extra asr-service
 ```
 
 Now we can run servers:

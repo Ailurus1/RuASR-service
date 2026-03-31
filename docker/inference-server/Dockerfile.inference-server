@@ -1,4 +1,4 @@
-FROM python:3.11
+FROM ghcr.io/astral-sh/uv:0.5.5-python3.12-bookworm-slim
 
 RUN apt update && \
     apt upgrade -y && \
@@ -6,9 +6,9 @@ RUN apt update && \
 
 COPY . .
 
-RUN curl -LsSf https://astral.sh/uv/install.sh | sh
+# RUN curl -LsSf https://astral.sh/uv/install.sh | sh
 
-ENV PATH="/root/.local/bin:$PATH"
+# ENV PATH="/root/.local/bin:$PATH"
 
 RUN uv pip install --system -r pyproject.toml --extra asr-service
 

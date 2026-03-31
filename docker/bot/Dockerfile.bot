@@ -1,4 +1,4 @@
-FROM python:alpine3.17
+FROM ghcr.io/astral-sh/uv:0.5.5-python3.12-alpine
 
 RUN apk update && \
     apk upgrade && \
@@ -7,9 +7,9 @@ RUN apk update && \
 
 COPY . .
 
-RUN curl -LsSf https://astral.sh/uv/install.sh | sh
+# RUN curl -LsSf https://astral.sh/uv/install.sh | sh
 
-ENV PATH="/root/.local/bin:$PATH"
+# ENV PATH="/root/.local/bin:$PATH"
 
 RUN uv pip install --system -r pyproject.toml --extra bot
 
