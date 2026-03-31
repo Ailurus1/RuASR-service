@@ -11,7 +11,12 @@ Then just type
 ```bash
 docker compose up
 ```
-It will automatically run both bot and asr-model inference services and you can open chat with your bot in messanger and start using it.
+It will automatically run:
+- bot service
+- ASR-model inference service
+- **web UI service** on `http://localhost:7860`
+
+You can either interact with the bot via Telegram or open the web UI in your browser and upload/record audio for transcription.
 
 ### Another option: local manual deploy
 
@@ -34,15 +39,15 @@ uv pip install -r pyproject.toml --extra asr-service
 Now we can run servers:
 
 ```bash
-# 1st console
-# Start bot service.
+# 1st console: Start inference service
+python3 -m inference_server
 
+# 2nd console: Start bot service (optional if you only need web UI)
 python3 bot
 
-# 2nd console
-# Start inference service
-
-python3 inference_server
+# 3rd console: Start Gradio web UI (optional if you only need Telegram bot)
+uv pip install -r pyproject.toml --extra webui
+python3 -m webui
 ```
 
 ## Evaluation

@@ -1,0 +1,17 @@
+FROM python:3.11-slim
+
+WORKDIR /app
+
+COPY pyproject.toml ./
+COPY inference_server ./inference_server
+COPY webui ./webui
+
+RUN pip install --no-cache-dir uv && \
+    uv pip install -r pyproject.toml --extra asr-service --extra webui
+
+ENV ASR_URL=http://inference-service:9090/asr/
+ENV WEBUI_PORT=7860
+
+EXPOSE 7860
+
+CMD ["python", "-m", "webui"]

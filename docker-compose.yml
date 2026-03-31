@@ -29,6 +29,21 @@ services:
     environment:
       CONTAINERIZED: true
 
+  webui-service:
+    image: asr/webui
+    build:
+      context: .
+      dockerfile: docker/webui/Dockerfile.webui
+    networks:
+      - asr-service-network
+    depends_on:
+      - inference-service
+    ports:
+      - "7860:7860"
+    environment:
+      ASR_URL: "http://inference-service:9090/asr/"
+      WEBUI_PORT: "7860"
+
 networks:
   asr-service-network:
     driver: bridge
