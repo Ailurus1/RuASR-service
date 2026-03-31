@@ -33,6 +33,9 @@ asr-service = [
     "pyannote.audio",
     "pyannote.core"
 ]
+webui = [
+    "gradio>=4.0.0",
+]
 train = [
     "numpy <2.0.0",
     "torch",
