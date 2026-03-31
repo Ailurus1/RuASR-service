@@ -16,7 +16,7 @@ setup-deps:
 	fi
 	uv venv --python 3.11 --python-preference only-managed && \
 	source .venv/bin/activate && \
-	uv pip install -r requirements.txt
+	uv pip install -r pyproject.toml
 
 pre-commit:
 	@pre-commit run --all-files

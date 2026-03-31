@@ -3,7 +3,10 @@ from typing import List, Any
 import json
 
 import requests
+import os
+from urllib.parse import urlparse
 from telegram import Update, InlineKeyboardMarkup
+from telegram.request import HTTPXRequest
 from telegram.ext import (
     ApplicationBuilder,
     CommandHandler,
@@ -28,8 +31,36 @@ class Bot(object):
     ) -> None:
         self.logger = logging.getLogger(__name__)
 
+        raw_proxy_url = (
+            os.environ.get("TG_PROXY_URL")
+            or os.environ.get("HTTPS_PROXY")
+        )
+        proxy_url = None
+        if raw_proxy_url:
+            scheme = urlparse(raw_proxy_url).scheme.lower()
+            if scheme in {"http", "https", "socks5", "socks5h"}:
+                proxy_url = raw_proxy_url
+            else:
+                self.logger.warning(
+                    "Unsupported proxy URL scheme '%s' in TG_PROXY_URL/HTTPS_PROXY. "
+                    "Expected http(s):// or socks5://. "
+                    "For Shadowsocks ssconf://, run a local SOCKS5 proxy (e.g. 127.0.0.1:1080) "
+                    "and set TG_PROXY_URL=socks5://127.0.0.1:1080",
+                    scheme,
+                )
+        request = HTTPXRequest(
+            proxy_url=proxy_url,
+            connect_timeout=20.0,
+            read_timeout=20.0,
+            write_timeout=20.0,
+            pool_timeout=20.0,
+        )
         self.app = (
-            ApplicationBuilder().token(token).arbitrary_callback_data(True).build()
+            ApplicationBuilder()
+            .token(token)
+            .request(request)
+            .arbitrary_callback_data(True)
+            .build()
         )
         self.model_endpoint = model_endpoint
         self.keyboard: List[Any] = []
@@ -174,5 +205,7 @@ class Bot(object):
 
         self.logger.info("Bot is running...")
         self.app.run_polling(
-            allowed_updates=Update.ALL_TYPES, drop_pending_updates=True
+            allowed_updates=Update.ALL_TYPES,
+            drop_pending_updates=True,
+            bootstrap_retries=5,
         )

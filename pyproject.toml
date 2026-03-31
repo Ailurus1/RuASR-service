@@ -15,7 +15,7 @@ dependencies = [
 
 [project.optional-dependencies]
 bot = [
-    "python-telegram-bot[callback-data]",
+    "python-telegram-bot[callback-data,socks]",
     "moviepy ==1.0.3",
     "requests"
 ]
@@ -24,7 +24,7 @@ asr-service = [
     "uvicorn",
     "torch ==2.5.1",
     "transformers",
-    "torchaudio",
+    "torchaudio ==2.5.1",
     "peft",
     "setuptools",
     "soundfile",

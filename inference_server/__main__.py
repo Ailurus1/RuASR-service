@@ -1,8 +1,8 @@
 from fastapi import FastAPI, File, UploadFile
 from fastapi.responses import JSONResponse
 import uvicorn
-from .model import ASRModel
-from .profiles import PROFILES
+from model import ASRModel
+from profiles import PROFILES
 import asyncio
 from asyncio import Future
 from asyncio.queues import Queue

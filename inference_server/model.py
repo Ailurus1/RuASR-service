@@ -9,7 +9,7 @@ from transformers import (
 from peft import PeftModel
 from io import BytesIO
 import torchaudio
-from .profiles import ModelProfile
+from profiles import ModelProfile
 from pathlib import Path
 import numpy as np
 from typing import get_args
@@ -46,12 +46,7 @@ class ASRModel:
             config.model_name, **config.model_features
         )
 
-        forced_decoder_ids = processor.get_decoder_prompt_ids(**config.model_features)
-
-        self.generate_kwargs = {
-            "forced_decoder_ids": forced_decoder_ids,
-            **config.model_features,
-        }
+        self.generate_kwargs = {**config.model_features}
 
         self.pipeline = AutomaticSpeechRecognitionPipeline(
             model=model,
