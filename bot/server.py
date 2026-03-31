@@ -31,10 +31,7 @@ class Bot(object):
     ) -> None:
         self.logger = logging.getLogger(__name__)
 
-        raw_proxy_url = (
-            os.environ.get("TG_PROXY_URL")
-            or os.environ.get("HTTPS_PROXY")
-        )
+        raw_proxy_url = os.environ.get("TG_PROXY_URL") or os.environ.get("HTTPS_PROXY")
         proxy_url = None
         if raw_proxy_url:
             scheme = urlparse(raw_proxy_url).scheme.lower()
