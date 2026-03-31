@@ -15,6 +15,7 @@ import numpy as np
 from typing import get_args
 from pyannote.audio import Pipeline
 import logging
+import os
 
 
 UnpreparedAudioType = Union[BytesIO, str, Path]
